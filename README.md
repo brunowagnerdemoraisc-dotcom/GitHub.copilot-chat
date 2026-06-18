@@ -1,420 +1,388 @@
-<?php 
-$pageTitle = "Prestação de Contas";
-include 'includes/header.php'; 
-include 'includes/menu.php'; 
+<?php
+ob_start();
+session_start();
+
+$pageTitle = "Notícias";
 
 /* =========================
-   TEUS DOCUMENTOS FIXOS (NÃO MEXIDO)
+   CONFIGURAÇÕES
 ========================= */
-$documentos = [
+const FICHEIRO = "noticias.json";
+const PASTA_UPLOADS = "uploads_noticias/";
 
- "2025" => [
-        [
-            "titulo" => "Relatório de Atividades 2025",
-            "link" => "img/Relatorio-de-Gestao-do-exercicio-2025-ORIG.pdf"
-        ],
-        [
-            "titulo" => "Relatório de Gestão do exercício 2025",
-            "link" => "img/Relatorio-de-Gestao-do-exercicio-2025-Comprimido.pdf"
-        ],
-        [
-            "titulo" => "Acta do Conselho Fiscal 2025",
-            "link" => "img/Ata-do-CF2025.pdf"
-        ],
-        [
-            "titulo" => "Parecer do Conselho Fiscal 2025",
-            "link" => "img/Parecer-CF2025.pdf"
-        ],
-        [
-            "titulo" => "Declaração Responsabilidade 2025",
-            "link" => "img/Declaracao-de-responsabilidade2025.pdf"
-        ]
-    ],
-
-    "2024" => [
-        [
-            "titulo" => "Relatório de contas 2024",
-            "link" => "img/RelatoriodeContas2024-compactado-1.pdf"
-        ],
-        [
-            "titulo" => "Ata Conselho Fiscal contas 2024",
-            "link" => "img/ActaDireccaoContas2024.pdf"
-        ],
-        [
-            "titulo" => "Parecer Conselho Fiscal Contas 2024",
-            "link" => "img/Parecer-CFcontas2024.pdf"
-        ],
-        [
-            "titulo" => "Ata Aprovação de Contas 2024",
-            "link" => "img/ActaDireccaoContas2024.pdf"
-        ]
-    ],
-
-    "2023" => [
-        [
-            "titulo" => "Relatório de contas 2023",
-            "link" => "img/Relatorio-de-Contas-2023_compressed-1-2.pdf"
-        ],
-        [
-            "titulo" => "Parecer do Conselho Fiscal 2023",
-            "link" => "img/Parecer-do-Conselho-Fiscal2023.pdf"
-        ],
-        [
-            "titulo" => "Declaração Responsabilidade 2023",
-            "link" => "img/Declaracao-de-responsabilidade-Contas-2023-1.pdf"
-        ],
-        [
-            "titulo" => "Ata Aprovação de Contas 2023",
-            "link" => "img/Acta-de-aprovacao-de-contas-2023-1.pdf"
-        ]
-    ],
-
-    "2022" => [
-        [
-            "titulo" => "Relatório de contas 2022",
-            "link" => "img/Relatorio-de-contas-2022_compressed-1.pdf"
-        ],
-        [
-            "titulo" => "Ata Conselho Fiscal contas 2022",
-            "link" => "img/Ata-Conselho-Fiscal-Contas-2022.pdf"
-        ],
-        [
-            "titulo" => "Parecer Conselho Fiscal Contas 2022",
-            "link" => "img/Parecer-Conselho-Fiscal-Contas-2022.pdf"
-        ],
-        [
-            "titulo" => "Ata Aprovação de Contas 2022",
-            "link" => "img/Acta-Aprovacao-de-Contas-2022.pdf"
-        ],
-        [
-            "titulo" => "Declaração de Responsabilidade Final de Exercício 2022",
-            "link" => "img/Declaracao-de-Responsabilidade-Final-de-Exercicio-2022.pdf"
-        ]
-    ],
-
-    "2021" => [
-        [
-            "titulo" => "Relatório de Contas 2021",
-            "link" => "img/Relatorio-de-contas-2021_compressed-1.pdf"
-        ],
-        [
-            "titulo" => "Ata de Aprovação de Contas 2021",
-            "link" => "img/Acta-de-Aprovacao-de-contas-2021.pdf"
-        ],
-        [
-            "titulo" => "Ata Assembleia 2021",
-            "link" => "img/Ata-Assembleia.pdf"
-        ],
-        [
-            "titulo" => "Parecer do Conselho Fiscal 2021",
-            "link" => "img/Parecer-do-Conselho-Fiscal.pdf"
-        ],
-        [
-            "titulo" => "Declaração Responsabilidade 2021",
-            "link" => "img/Declaracao-responsabilidade.pdf"
-        ]
-    ],
-
-    "2020" => [
-        [
-            "titulo" => "Ata Assembleia 2020",
-            "link" => "img/Ata-Assembleia 2020.pdf"
-        ],
-        [
-            "titulo" => "Parecer do Conselho Fiscal 2020",
-            "link" => "img/Parecer-do-Conselho-Fiscal 2020.pdf"
-        ],
-        [
-            "titulo" => "Relatório de contas 2020",
-            "link" => "img/Relatorio-e-contas 2020.pdf"
-        ]
-    ],
-
-    "2019" => [
-        [
-            "titulo" => "Relatório de Contas 2019",
-            "link" => "img/Relatório-de-Contas-2019_compressed-1.pdf"
-        ],
-        [
-            "titulo" => "Ata de Aprovação de Contas Direcção 2019",
-            "link" => "img/Acta-de-Aprovação-de-Contas-Direcção2019.pdf"
-        ],
-        [
-            "titulo" => "Relatório de Actividades 2019",
-            "link" => "img/Relatório-de-Actividades-2019.pdf"
-        ]
-    ],
-
-    "2018" => [
-        [
-            "titulo" => "Relatório de Actividades 2018",
-            "link" => "img/RelatórioActividades2018_compressed-1.pdf"
-        ],
-        [
-            "titulo" => "Relatório de Contas 2018",
-            "link" => "img/Relatório-de-Contas-2018_compressed.pdf"
-        ],
-        [
-            "titulo" => "Declaração de responsabilidade 2018",
-            "link" => "https://centroparoquial.almeirim.org/wp-content/uploads/2019/05/Declara%C3%A7%C3%A3o-responsabilidade2018-1.pdf"
-        ]
-    ],
-
-    "2017" => [
-        [
-            "titulo" => "Relatório de Gestão de Contas de 2017",
-            "link" => "img/Relatório-de-Gestão-de-Contas-de-2017-comprimido.pdf"
-        ],
-        [
-            "titulo" => "Ata da Direcção Contas 2017",
-            "link" => "img/ata-da-Direcção-Contas-2017-2.pdf"
-        ],
-        [
-            "titulo" => "Ata do conselho fiscal contas 2017",
-            "link" => "img/ata-do-conselho-fiscal-contas-2017-1.pdf"
-        ],
-        [
-            "titulo" => "Parecer do Conselho Fiscal 2017",
-            "link" => "img/relatórioatividades-2017-2.pdf"
-        ],
-        [
-            "titulo" => "Relatório Atividades 2017",
-            "link" => "documentos/2017/relatorio-atividades-2017.pdf"
-        ],
-        [
-            "titulo" => "Orçamento 2018",
-            "link" => "img/Orçamento-2018.pdf"
-        ],
-        [
-            "titulo" => "Acta e Parecer do Conselho Fiscal 2017",
-            "link" => "img/Acta-e-Parecer-do-Conselho-Fiscal-2017.pdf"
-        ]
-    ],
-
-    "2016 / 2015" => [
-        [
-            "titulo" => "Relatório de Gestão e Exercício até 31 de Dezembro de 2016",
-            "link" => "c:\Users\utilizador\Downloads\Relatório-de-Gestão-e-Exercício-até-31-de-Dezembro-de-2016-6.7z (1).zip"
-        ],
-        [
-            "titulo" => "Relatório de actividades de 2016",
-            "link" => "c:\Users\utilizador\Downloads\Relatório-de-actividades-de-2016.7z (1).zip"
-        ],
-        [
-            "titulo" => "Ata de Aprovação da Direcção do Relatório do Exercício de 2016",
-            "link" => "img/Acta-de-Aprovação-da-Direcção-do-Relatório-do-Exercício-de-2016.pdf"
-        ],
-        [
-            "titulo" => "Relatório de Gestão do exercício até 31 de Dezembro de 2015",
-            "link" => "img/Contas2015.pdf"
-        ]
-    ]
-
-];
-
-
-/* =========================
-   UPLOAD DE NOVOS DOCUMENTOS
-========================= */
-$baseDir = "img/";
-
-if(isset($_POST['upload'])){
-
-    $ano = preg_replace('/[^0-9]/', '', $_POST['ano']);
-    $titulo = trim($_POST['titulo']);
-
-    $pasta = $baseDir . $ano . "/";
-
-    if(!file_exists($pasta)){
-        mkdir($pasta, 0777, true);
-    }
-
-    $fileName = basename($_FILES["ficheiro"]["name"]);
-    $target = $pasta . $fileName;
-
-    move_uploaded_file($_FILES["ficheiro"]["tmp_name"], $target);
+if (!is_dir(PASTA_UPLOADS)) {
+    mkdir(PASTA_UPLOADS, 0777, true);
 }
 
+if (!file_exists(FICHEIRO)) {
+    file_put_contents(FICHEIRO, json_encode([], JSON_PRETTY_PRINT));
+}
+
+$noticias = json_decode(file_get_contents(FICHEIRO), true) ?: [];
+
 /* =========================
-   APAGAR NOVOS DOCUMENTOS
+   APAGAR NOTÍCIA
 ========================= */
-if(isset($_GET['del'])){
-    $file = $_GET['del'];
-    if(file_exists($file)){
-        unlink($file);
+if (
+    isset($_GET['apagar']) &&
+    isset($_SESSION['perfil']) &&
+    $_SESSION['perfil'] === 'admin'
+) {
+    $id = (int) $_GET['apagar'];
+
+    if (isset($noticias[$id])) {
+
+        if (
+            !empty($noticias[$id]['imagem']) &&
+            file_exists($noticias[$id]['imagem']) &&
+            $noticias[$id]['imagem'] !== 'img/default.jpg'
+        ) {
+            unlink($noticias[$id]['imagem']);
+        }
+
+        unset($noticias[$id]);
+
+        $noticias = array_values($noticias);
+
+        file_put_contents(
+            FICHEIRO,
+            json_encode($noticias, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+        );
+
+        header("Location: noticias.php");
+        exit;
     }
 }
 
 /* =========================
-   CARREGAR NOVOS DOCUMENTOS
+   ADICIONAR NOTÍCIA
 ========================= */
-$pastas = glob($baseDir . "*", GLOB_ONLYDIR);
+if (
+    isset($_POST['adicionar']) &&
+    isset($_SESSION['perfil']) &&
+    in_array($_SESSION['perfil'], ['admin', 'editor'])
+) {
 
-$novos = [];
+    $titulo = trim($_POST['titulo'] ?? '');
+    $descricao = trim($_POST['descricao'] ?? '');
+    $texto = trim($_POST['texto'] ?? '');
 
-foreach($pastas as $pasta){
+    $imagem = "img/default.jpg";
+    $data = date("d/m/Y");
 
-    $ano = basename($pasta);
+    if (!empty($_FILES['imagem']['name'])) {
 
-    $files = glob($pasta . "/*.pdf");
+        $extensao = strtolower(
+            pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION)
+        );
 
-    foreach($files as $file){
+        $permitidas = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
-        $novos[$ano][] = [
-            "titulo" => basename($file, ".pdf"),
-            "link" => $file
-        ];
+        if (in_array($extensao, $permitidas)) {
+
+            $nomeFicheiro = time() . "_" .
+                preg_replace(
+                    '/[^a-zA-Z0-9._-]/',
+                    '',
+                    $_FILES['imagem']['name']
+                );
+
+            $destino = PASTA_UPLOADS . $nomeFicheiro;
+
+            if (
+                move_uploaded_file(
+                    $_FILES['imagem']['tmp_name'],
+                    $destino
+                )
+            ) {
+                $imagem = $destino;
+            }
+        }
     }
+
+    $noticias[] = [
+        "titulo"     => $titulo,
+        "data"       => $data,
+        "imagem"     => $imagem,
+        "descricao"  => $descricao,
+        "texto"      => $texto
+    ];
+
+    file_put_contents(
+        FICHEIRO,
+        json_encode($noticias, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+    );
+
+    header("Location: noticias.php");
+    exit;
 }
 
-/* =========================
-   JUNTAR FIXOS + NOVOS
-========================= */
-foreach($novos as $ano => $lista){
-
-    if(!isset($documentos[$ano])){
-        $documentos[$ano] = [];
-    }
-
-    $documentos[$ano] = array_merge($documentos[$ano], $lista);
-}
-
-krsort($documentos);
+include 'includes/header.php';
+include 'includes/menu.php';
 ?>
 
-<section class="prestacao-contas">
+<section class="noticias">
+    <div class="container">
 
-<div class="container">
+        <h1>Últimas Notícias</h1>
 
-<h1>Prestação de Contas</h1>
+        <?php if (
+            isset($_SESSION['perfil']) &&
+            in_array($_SESSION['perfil'], ['admin', 'editor'])
+        ): ?>
 
-<p class="subtitulo">Adicionar, ver e apagar documentos</p>
+            <div class="form">
+                <form method="POST" enctype="multipart/form-data">
 
-<!-- FORMULARIO -->
-<div class="admin-box">
+                    <input
+                        type="text"
+                        name="titulo"
+                        placeholder="Título"
+                        required
+                    >
 
-<form method="POST" enctype="multipart/form-data">
+                    <input
+                        type="text"
+                        name="descricao"
+                        placeholder="Descrição"
+                        required
+                    >
 
-    <input type="text" name="ano" placeholder="Ano (ex: 2025)" required>
-    <input type="text" name="titulo" placeholder="Título" required>
-    <input type="file" name="ficheiro" required>
+                    <textarea
+                        name="texto"
+                        placeholder="Texto completo"
+                        required
+                    ></textarea>
 
-    <button type="submit" name="upload">Adicionar Documento</button>
+                    <input type="file" name="imagem">
 
-</form>
+                    <button type="submit" name="adicionar">
+                        Adicionar Notícia
+                    </button>
 
-</div>
+                </form>
+            </div>
 
-<!-- DOCUMENTOS -->
-<?php foreach($documentos as $ano => $lista): ?>
+        <?php endif; ?>
 
-<div class="bloco-ano">
+        <div class="grid">
 
-<h2><?= $ano; ?></h2>
+            <?php foreach ($noticias as $id => $n): ?>
 
-<div class="grid-documentos">
+                <div class="card">
 
-<?php foreach($lista as $doc): ?>
+                    <img
+                        src="<?= htmlspecialchars($n['imagem']) ?>"
+                        alt="<?= htmlspecialchars($n['titulo']) ?>"
+                    >
 
-<div class="card-documento">
+                    <div class="conteudo">
 
-<div class="icone">📄</div>
+                        <span><?= htmlspecialchars($n['data']) ?></span>
 
-<h3><?= $doc['titulo']; ?></h3>
+                        <h2>
+                            <?= htmlspecialchars($n['titulo']) ?>
+                        </h2>
 
-<a href="<?= $doc['link']; ?>" target="_blank" class="btn-download">
-Ver Documento
-</a>
+                        <p>
+                            <?= htmlspecialchars($n['descricao']) ?>
+                        </p>
 
-<a href="?del=<?= $doc['link']; ?>" style="display:inline-block;margin-top:10px;padding:8px 12px;background:red;color:white;border-radius:6px;text-decoration:none;">
-Apagar
-</a>
+                        <button onclick="abrirModal(<?= $id ?>)">
+                            Ler Mais
+                        </button>
 
-</div>
+                        <?php if (
+                            isset($_SESSION['perfil']) &&
+                            $_SESSION['perfil'] === 'admin'
+                        ): ?>
+                            <br><br>
 
-<?php endforeach; ?>
+                            <a
+                                href="?apagar=<?= $id ?>"
+                                onclick="return confirm('Apagar notícia?')"
+                            >
+                                🗑 Apagar
+                            </a>
+                        <?php endif; ?>
 
-</div>
+                    </div>
 
-</div>
+                </div>
 
-<?php endforeach; ?>
+            <?php endforeach; ?>
 
-</div>
+        </div>
 
+    </div>
 </section>
 
-<style>
+<!-- MODAL -->
+<div id="modal" class="modal">
 
-.prestacao-contas{
-    padding: 60px 20px;
-    background: #f5f5f5;
+    <div class="modal-content">
+
+        <span class="fechar" onclick="fecharModal()">
+            &times;
+        </span>
+
+        <img id="m_img" alt="" style="width:100%;margin-bottom:15px;">
+
+        <h2 id="m_titulo"></h2>
+
+        <span id="m_data"></span>
+
+        <p id="m_texto"></p>
+
+    </div>
+
+</div>
+
+<script>
+const noticias = <?= json_encode(
+    $noticias,
+    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+); ?>;
+
+function abrirModal(id) {
+
+    document.getElementById("m_img").src =
+        noticias[id].imagem;
+
+    document.getElementById("m_titulo").innerText =
+        noticias[id].titulo;
+
+    document.getElementById("m_data").innerText =
+        noticias[id].data;
+
+    document.getElementById("m_texto").innerText =
+        noticias[id].texto;
+
+    document.getElementById("modal").style.display = "flex";
+}
+
+function fecharModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+window.onclick = function(e) {
+    const modal = document.getElementById("modal");
+
+    if (e.target === modal) {
+        fecharModal();
+    }
+};
+</script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f5f5f5;
 }
 
 .container{
-    max-width: 1200px;
-    margin: auto;
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
 }
 
 h1{
-    text-align: center;
-    font-size: 42px;
+    text-align:center;
+    margin-bottom:30px;
 }
 
-.subtitulo{
-    text-align: center;
-    margin-bottom: 30px;
+.form{
+    margin-bottom:50px;
 }
 
-.admin-box{
-    background: white;
-    padding: 20px;
-    margin-bottom: 40px;
-    border-radius: 10px;
+.form form{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    max-width:600px;
+    margin:auto;
 }
 
-.admin-box input{
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
+.form input,
+.form textarea{
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
 }
 
-.admin-box button{
-    width: 100%;
-    padding: 10px;
-    background: green;
-    color: white;
-    border: none;
+.form textarea{
+    min-height:150px;
+    resize:vertical;
 }
 
-.bloco-ano h2{
-    color: #007bff;
-    border-left: 5px solid #007bff;
-    padding-left: 10px;
+button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:#fff;
+    cursor:pointer;
 }
 
-.grid-documentos{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-    gap: 20px;
+button:hover{
+    opacity:.9;
 }
 
-.card-documento{
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
 }
 
-.btn-download{
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: #007bff;
-    color: white;
-    text-decoration: none;
+.card{
+    background:#fff;
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,.1);
 }
 
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.conteudo{
+    padding:15px;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-content{
+    background:#fff;
+    width:90%;
+    max-width:700px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:10px;
+    padding:20px;
+    position:relative;
+}
+
+.fechar{
+    position:absolute;
+    right:15px;
+    top:10px;
+    font-size:30px;
+    cursor:pointer;
+}
 </style>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+include 'includes/footer.php';
+ob_end_flush();
+?>
